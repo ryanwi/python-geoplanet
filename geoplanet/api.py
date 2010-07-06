@@ -110,7 +110,7 @@ class GeoPlanet(GeoPlanetCall):
       geoplanet.states.US()
       
       # Get Place
-      geoplanet.place(woeid=2507854)
+      geoplanet.place.woeid_2507854()
 
 
     Using the data returned
