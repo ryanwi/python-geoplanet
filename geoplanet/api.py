@@ -57,7 +57,7 @@ class GeoPlanetCall(object):
         uri = self.uri.strip("/")
         method = "GET"
 
-        uriBase = "http://%s/%s%s" % (self.domain, api_version, uri)
+        uriBase = "http://%s/%s" %(self.domain, uri)
         
         urlArgs = {"format":self.format, "appid":self.appid}
         if self.encoded_args:
@@ -96,8 +96,14 @@ class GeoPlanet(GeoPlanetCall):
 
       geoplanet = GeoPlanet(appid=[yourappidhere])
 
-      # Get 
-      geoplanet.
+      # Get all countries
+      geoplanet.countries()
+      
+      # Get all US states
+      geoplanet.states.US()
+      
+      # Get Place
+      geoplanet.place(woeid=2507854)
 
 
     Using the data returned
@@ -106,7 +112,10 @@ class GeoPlanet(GeoPlanetCall):
     GeoPlanet API calls return decoded JSON. This is converted into
     a bunch of Python lists, dicts, ints, and strings. For example::
 
-      x = geoplanet.
+      x = geoplanet.countries()
+
+      # The number of countries
+      x['places']['count']
 
 
     Getting raw XML data
@@ -121,7 +130,7 @@ class GeoPlanet(GeoPlanetCall):
       of XML.
 
     """
-    def __init__(self, format="json", domain="http://where.yahooapis.com/", appid=None, api_version='v1'):
+    def __init__(self, format="json", domain="where.yahooapis.com", appid=None, api_version='v1'):
         """
         Create a new GeoPlanet API connector.
 
@@ -139,5 +148,13 @@ class GeoPlanet(GeoPlanetCall):
             uri = api_version
 
         GeoPlanetCall.__init__(self, appid, format, domain, uri)
+
+    def place(self, woeid):
+        """
+        """
+        return GeoPlanetCall(self.appid, self.format, self.domain, self.uri + "/place/" + str(woeid), self.encoded_args).__call__()
+
+        
+        
 
 __all__ = ["GeoPlanet", "GeoPlanetError", "GeoPlanetHTTPError"]
