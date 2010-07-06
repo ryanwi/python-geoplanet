@@ -1,11 +1,10 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '1.4'
+version = '0.1'
 
 install_requires = [
     # -*- Extra requirements: -*-
-    "python-dateutil>=1.1",
     ]
 
 def _py26OrGreater():
@@ -15,27 +14,26 @@ if not _py26OrGreater():
     install_requires.append("simplejson>=1.7.1")
 
 
-setup(name='twitter',
+setup(name='python-geoplanet',
       version=version,
-      description="An API and command-line toolset for Twitter (twitter.com)",
+      description="An API for GeoPlanet (http://developer.yahoo.com/geo/geoplanet/)",
       long_description=open("./README", "r").read(),
       # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
-          "Development Status :: 5 - Production/Stable",
-          "Environment :: Console",
-          "Intended Audience :: End Users/Desktop",
+          "Development Status :: ",
+          "Environment :: ",
+          "Intended Audience :: ",
           "Natural Language :: English",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-          "Topic :: Communications :: Chat :: Internet Relay Chat",
           "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
           "Topic :: Utilities",
           "License :: OSI Approved :: MIT License",
           ],
-      keywords='twitter, IRC, command-line tools, web 2.0',
-      author='Mike Verdone',
-      author_email='mike.verdone+twitterapi@gmail.com',
-      url='http://mike.verdone.ca/twitter/',
+      keywords='geoplanet, geo',
+      author='',
+      author_email='',
+      url='',
       license='MIT License',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
@@ -44,7 +42,5 @@ setup(name='twitter',
       entry_points="""
       # -*- Entry points: -*-
       [console_scripts]
-      twitter=twitter.cmdline:main
-      twitterbot=twitter.ircbot:main
       """,
       )

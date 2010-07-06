@@ -1,9 +1,7 @@
 """
-The minimalist yet fully featured Twitter API and Python toolset.
+The minimalist yet fully featured GeoPlanet API and Python toolset.
 
-For building your own applications, look at the `Twitter` class.
+For building your own applications, look at the `GeoPlanet` class.
 """
 
 from api import *
-from auth import NoAuth, UserPassAuth
-from oauth import OAuth
