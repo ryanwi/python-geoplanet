@@ -1,4 +1,5 @@
 
+import urllib
 import urllib2
 
 from exceptions import Exception
@@ -39,9 +40,7 @@ class GeoPlanetHTTPError(GeoPlanetError):
                 self.e.fp.read()))
 
 class GeoPlanetCall(object):
-    def __init__(
-        self, appid, format, domain, uri="", 
-        encoded_args=None):
+    def __init__(self, appid, format, domain, uri="", encoded_args=None):
         self.appid = appid
         self.format = format
         self.domain = domain
@@ -52,31 +51,20 @@ class GeoPlanetCall(object):
         try:
             return object.__getattr__(self, k)
         except AttributeError:
-            return GeoPlanetCall(
-                self.appid, self.format, self.domain,
-                self.uri + "/" + k, self.encoded_args)
+            return GeoPlanetCall(self.appid, self.format, self.domain, self.uri + "/" + k, self.encoded_args)
 
     def __call__(self, **kwargs):
         uri = self.uri.strip("/")
         method = "GET"
 
-        uriBase = "http://%s/%s%s%s%s" %(
-                    self.domain, api_version, uri)
-
-        if (not self.encoded_args):
-            if kwargs.has_key('id'):
-                uri += "/%s" %(kwargs['id'])
-
-            self.encoded_args = self.auth.encode_params(uriBase, method, kwargs)
-
-        argStr = ""
+        uriBase = "http://%s/%s%s" % (self.domain, api_version, uri)
+        
+        urlArgs = {"format":self.format, "appid":self.appid}
+        if self.encoded_args:
+            urlArgs.update(self.encoded_args)
+        argStr = "?%s" % (urllib.urlencode(urlArgs))
+        
         argData = None
-        if (method == "GET"):
-            if self.encoded_args:
-                argStr = "?%s" %(self.encoded_args)
-        else:
-            argData = self.encoded_args
-
         headers = {}
 
         req = urllib2.Request(uriBase+argStr, argData, headers)
@@ -133,18 +121,14 @@ class GeoPlanet(GeoPlanetCall):
       of XML.
 
     """
-    def __init__(
-        self, format="json",
-        domain="http://where.yahooapis.com/", agent=None, secure=False, appid=None,
-        api_version='v1'):
+    def __init__(self, format="json", domain="http://where.yahooapis.com/", appid=None, api_version='v1'):
         """
         Create a new GeoPlanet API connector.
 
         `domain` lets you change the domain you are connecting. By
         default it's where.yahooapis.com.
 
-        `api_version` is used to set the base uri. By default it's
-        'v1'.
+        `api_version` is used to set the base uri. By default it's 'v1'.
         """
         
         if (format not in ("json", "geojson", "xml", "")):
@@ -152,9 +136,8 @@ class GeoPlanet(GeoPlanetCall):
 
         uri = ""
         if api_version:
-            uri = str(api_version)
+            uri = api_version
 
-        GeoPlanetCall.__init__(
-            self, appid, format, domain, uri, secure=secure)
+        GeoPlanetCall.__init__(self, appid, format, domain, uri)
 
 __all__ = ["GeoPlanet", "GeoPlanetError", "GeoPlanetHTTPError"]
