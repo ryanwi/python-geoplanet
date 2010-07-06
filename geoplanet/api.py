@@ -1,4 +1,5 @@
 
+import logging
 import urllib
 import urllib2
 
@@ -51,6 +52,7 @@ class GeoPlanetCall(object):
         try:
             return object.__getattr__(self, k)
         except AttributeError:
+            k = k.replace("woeid_","")
             return GeoPlanetCall(self.appid, self.format, self.domain, self.uri + "/" + k, self.encoded_args)
 
     def __call__(self, **kwargs):
@@ -58,6 +60,9 @@ class GeoPlanetCall(object):
         method = "GET"
 
         uriBase = "http://%s/%s" %(self.domain, uri)
+
+        if kwargs.has_key('filter'):
+            uriBase += ".%s" %(kwargs['filter'])
         
         urlArgs = {"format":self.format, "appid":self.appid}
         if self.encoded_args:
@@ -67,6 +72,8 @@ class GeoPlanetCall(object):
         argData = None
         headers = {}
 
+        print(uriBase+argStr)
+        logging.error(uriBase+argStr)
         req = urllib2.Request(uriBase+argStr, argData, headers)
         
         try:
@@ -148,11 +155,6 @@ class GeoPlanet(GeoPlanetCall):
             uri = api_version
 
         GeoPlanetCall.__init__(self, appid, format, domain, uri)
-
-    def place(self, woeid):
-        """
-        """
-        return GeoPlanetCall(self.appid, self.format, self.domain, self.uri + "/place/" + str(woeid), self.encoded_args).__call__()
 
         
         
