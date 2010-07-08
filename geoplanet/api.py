@@ -1,8 +1,8 @@
 
 import logging
-import urllib
 import urllib2
 
+from urllib import urlencode
 from exceptions import Exception
 
 
@@ -63,17 +63,19 @@ class GeoPlanetCall(object):
 
         if kwargs.has_key('filter'):
             uriBase += ".%s" %(kwargs['filter'])
-        
+
+        # package up url parameters            
         urlArgs = {"format":self.format, "appid":self.appid}
+        urlArgs.update(kwargs)
         if self.encoded_args:
             urlArgs.update(self.encoded_args)
-        argStr = "?%s" % (urllib.urlencode(urlArgs))
+        argStr = "?%s" % (urlencode(urlArgs))
         
         argData = None
         headers = {}
 
+        logging.debug(uriBase+argStr)
         print(uriBase+argStr)
-        logging.error(uriBase+argStr)
         req = urllib2.Request(uriBase+argStr, argData, headers)
         
         try:
